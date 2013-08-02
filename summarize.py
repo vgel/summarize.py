@@ -39,12 +39,16 @@ def summarize_block(block):
     d = dict( (compute_score(word_sent, word_sents), sent) for sent, word_sent in zip(sents, word_sents) )
     return d[max(d.keys())]
 
+def find_likely_body(b):
+    return max(b.find_all(), key=lambda t: len(t.find_all('p', recursive=False)))
+
 def summarize_page(url):
     import bs4
     import re
     import requests
 
-    b = bs4.BeautifulSoup(requests.get(url).text)
+    html = bs4.BeautifulSoup(requests.get(url).text)
+    b = find_likely_body(html)
     summaries = map(lambda p: re.sub('\s+', ' ', summarize_block(p.text)).strip(), b.find_all('p'))
     summaries = sorted(set(summaries), key=summaries.index) #dedpulicate and preserve order
     for summary in list(summaries):
