@@ -8,7 +8,7 @@ import string
 stop_words = stopwords.words('english')
 
 LOWER_BOUND = .20 #The low end of shared words to consider
-UPPER_BOUND = .90  #The high end, since anything above this is probably SEO garbage or a duplicate sentence
+UPPER_BOUND = .90 #The high end, since anything above this is probably SEO garbage or a duplicate sentence
 
 def is_unimportant(word):
     return word in ['.', '!', ',', ] or '\'' in word or word in stop_words
