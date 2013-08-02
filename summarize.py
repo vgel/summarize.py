@@ -54,7 +54,7 @@ def summarize_page(url):
     for summary in list(summaries):
         if not len(filter(lambda c: c.lower() in string.letters, summary)):
             summaries.remove(summary)
-    print '\n\n'.join(summaries)
+    print '\n\n'.join([html.title.text] + summaries)
 
 if __name__ == '__main__':
     import sys
