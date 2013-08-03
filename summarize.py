@@ -51,6 +51,21 @@ def find_likely_body(b):
     """Find the tag with the most directly-descended <p> tags"""
     return max(b.find_all(), key=lambda t: len(t.find_all('p', recursive=False)))
 
+class Summary(object):
+    def __init__(self, url, article_html, title, summaries):
+        self.url = url
+        self.article_html = article_html
+        self.title = title
+        self.summaries = summaries
+
+    def __repr__(self):
+        return 'Summary({0}, {1}, {2}, {3}, {4})'.format(
+            repr(self.url), repr(self.article_html), repr(self.title), repr(summaries)
+        )
+
+    def __str__(self):
+        return "{0} - {1}\n\n{2}".format(self.title, self.url, '\n'.join(self.summaries))
+
 def summarize_page(url):
     import bs4
     import re
@@ -60,11 +75,9 @@ def summarize_page(url):
     b = find_likely_body(html)
     summaries = map(lambda p: re.sub('\s+', ' ', summarize_block(p.text)).strip(), b.find_all('p'))
     summaries = sorted(set(summaries), key=summaries.index) #dedpulicate and preserve order
-    for summary in list(summaries):
-        if not len(filter(lambda c: c.lower() in string.letters, summary)):
-            summaries.remove(summary)
-    print '\n\n'.join([html.title.text] + summaries)
+    summaries = [ re.sub('\s+', ' ', summary.strip()) for summary in summaries if filter(lambda c: c.lower() in string.letters, summary) ]
+    return Summary(url, b, html.title.text if html.title else None, summaries)
 
 if __name__ == '__main__':
     import sys
-    summarize_page(sys.argv[1])
+    print summarize_page(sys.argv[1])
