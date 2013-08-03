@@ -38,7 +38,7 @@ def compute_score(sent, sents):
     UPPER_BOUND)"""
     if not len(sent):
         return 0
-    return sum( compare_sents_bounded(sent, sent1) for sent1 in sents ) / float(len(sent))
+    return sum( compare_sents_bounded(sent, sent1) for sent1 in sents ) / float(len(sents))
 
 def summarize_block(block):
     """Return the sentence that best summarizes block"""
