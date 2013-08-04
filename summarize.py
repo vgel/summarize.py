@@ -64,7 +64,7 @@ class Summary(object):
         )
 
     def __str__(self):
-        return "{0} - {1}\n\n{2}".format(self.title, self.url, '\n'.join(self.summaries))
+        return u"{0} - {1}\n\n{2}".format(self.title, self.url, '\n'.join(self.summaries))
 
 def summarize_page(url):
     import bs4
@@ -80,4 +80,4 @@ def summarize_page(url):
 
 if __name__ == '__main__':
     import sys
-    print summarize_page(sys.argv[1])
+    print u"%s" % summarize_page(sys.argv[1])
