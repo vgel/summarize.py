@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import itertools
 import nltk
 from nltk.corpus import stopwords
 import string
@@ -60,7 +59,7 @@ class Summary(object):
 
     def __repr__(self):
         return 'Summary({0}, {1}, {2}, {3}, {4})'.format(
-            repr(self.url), repr(self.article_html), repr(self.title), repr(summaries)
+            repr(self.url), repr(self.article_html), repr(self.title), repr(self.summaries)
         )
 
     def __str__(self):
