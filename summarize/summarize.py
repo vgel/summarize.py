@@ -79,4 +79,10 @@ def summarize_page(url):
 
 if __name__ == '__main__':
     import sys
-    print u"%s" % summarize_page(sys.argv[1])
+
+    if len(sys.argv) > 0:
+        print u"%s" % summarize_page(sys.argv[1])
+        sys.exit(0)
+
+    print "Usage summarize.py <URL>"
+    sys.exit(1)
