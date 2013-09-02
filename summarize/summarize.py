@@ -87,7 +87,9 @@ def summarize_page(url):
     b = find_likely_body(html)
     summaries = map(lambda p: re.sub('\s+', ' ', summarize_block(p.text)).strip(), b.find_all('p'))
     summaries = sorted(set(summaries), key=summaries.index)  # deduplicate and preserve order
-    summaries = [re.sub('\s+', ' ', summary.strip()) for summary in summaries if filter(lambda c: c.lower() in string.letters, summary)]
+    summaries = [re.sub('\s+', ' ', summary.strip())
+                 for summary in summaries
+                 if filter(lambda c: c.lower() in string.letters, summary)]
     return Summary(url, b, html.title.text if html.title else None, summaries)
 
 if __name__ == '__main__':
