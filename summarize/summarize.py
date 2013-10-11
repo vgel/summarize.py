@@ -70,7 +70,7 @@ class Summary(object):
         self.summaries = summaries
 
     def __repr__(self):
-        return 'Summary({0}, {1}, {2}, {3}, {4})'.format(
+        return 'Summary({0}, {1}, {2}, {3})'.format(
             repr(self.url), repr(self.article_html), repr(self.title), repr(self.summaries)
         )
 
