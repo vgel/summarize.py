@@ -51,6 +51,8 @@ def compute_score(sent, sents):
 
 def summarize_block(block):
     """Return the sentence that best summarizes block"""
+    if not block:
+        return ""
     sents = nltk.sent_tokenize(block)
     word_sents = map(nltk.word_tokenize, sents)
     d = dict((compute_score(word_sent, word_sents), sent) for sent, word_sent in zip(sents, word_sents))
@@ -96,7 +98,7 @@ if __name__ == '__main__':
     import sys
 
     if len(sys.argv) > 0:
-        print u"%s" % summarize_page(sys.argv[1])
+        print (u"%s" % summarize_page(sys.argv[1])).encode("ascii",'replace')
         sys.exit(0)
 
     print "Usage summarize.py <URL>"
