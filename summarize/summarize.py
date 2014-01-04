@@ -51,6 +51,8 @@ def compute_score(sent, sents):
 
 def summarize_block(block):
     """Return the sentence that best summarizes block"""
+    if not block:
+        return None
     sents = nltk.sent_tokenize(block)
     word_sents = map(nltk.word_tokenize, sents)
     d = dict((compute_score(word_sent, word_sents), sent) for sent, word_sent in zip(sents, word_sents))
@@ -85,7 +87,7 @@ def summarize_page(url):
 
     html = bs4.BeautifulSoup(requests.get(url).text)
     b = find_likely_body(html)
-    summaries = map(lambda p: re.sub('\s+', ' ', summarize_block(p.text)).strip(), b.find_all('p'))
+    summaries = map(lambda p: re.sub('\s+', ' ', summarize_block(p.text) or '').strip(), b.find_all('p'))
     summaries = sorted(set(summaries), key=summaries.index)  # deduplicate and preserve order
     summaries = [re.sub('\s+', ' ', summary.strip())
                  for summary in summaries
@@ -96,7 +98,7 @@ if __name__ == '__main__':
     import sys
 
     if len(sys.argv) > 0:
-        print u"%s" % summarize_page(sys.argv[1])
+        print (u"%s" % summarize_page(sys.argv[1])).encode('ascii','replace')
         sys.exit(0)
 
     print "Usage summarize.py <URL>"
