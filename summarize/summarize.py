@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-_IS_PYTHON_3 = sys.version_info.major == 3
 
 import codecs
 import nltk
@@ -9,6 +8,8 @@ from nltk.corpus import stopwords
 import re
 import string
 import sys
+
+_IS_PYTHON_3 = sys.version_info.major == 3
 
 stop_words = stopwords.words('english')
 
