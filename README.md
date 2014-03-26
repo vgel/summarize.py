@@ -22,13 +22,9 @@ To use NLTK with Python 3 currently, you must install the NLTK 3.0 alpha package
 
 ## Example:
 
-    $ ./summarize.py http://www.theverge.com/2013/8/1/4580718/fbi-can-remotely-activate-android-and-laptop-microphones-reports-wsj
-    FBI can remotely activate Android and laptop microphones, reports WSJ | The Verge
-
-    The Wall Street Journal reports that the FBI can already remotely activate those microphones to record conversations.
+    $ python3 summarize.py "http://www.theverge.com/2013/8/1/4580718/fbi-can-remotely-activate-android-and-laptop-microphones-reports-wsj"
+    FBI can remotely activate Android and laptop microphones, reports WSJ | The Verge - http://www.theverge.com/2013/8/1/4580718/fbi-can-remotely-activate-android-and-laptop-microphones-reports-wsj
 
     Remotely activated cell phone bugs predate iOS and Android
-
     What's new, according to several former anonymous officials, is a dedicated FBI group which regularly hacks into computers, using both custom and off-the-shelf surveillance software which it buys from private companies.
-
-    " While that source also claims the FBI takes care to make sure that only "relevant data" gets collected, it's still a little troubling to know that such a thing is easily possible and regularly done.
+    While that source also claims the FBI takes care to make sure that only "relevant data" gets collected, it's still a little troubling to know that such a thing is easily possible and regularly done.
