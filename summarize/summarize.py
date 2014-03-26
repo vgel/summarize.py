@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 
+from __future__ import print_function
+_IS_PYTHON_3 = sys.version_info.major == 3
+
+import codecs
 import nltk
 from nltk.corpus import stopwords
+import re
 import string
+import sys
 
 stop_words = stopwords.words('english')
 
@@ -12,6 +18,15 @@ LOWER_BOUND = .20
 # The high end, since anything above this is probably SEO garbage or a
 # duplicate sentence
 UPPER_BOUND = .90
+
+
+def u(s):
+    """Ensure our string is unicode independent of Python version, since Python 3 versions < 3.3 do not support the u"..." prefix"""
+    if _IS_PYTHON_3:
+        return s
+    else:
+        # not well documented but seems to work
+        return codecs.unicode_escape_decode(s)[0]
 
 
 def is_unimportant(word):
@@ -54,8 +69,9 @@ def summarize_block(block):
     if not block:
         return None
     sents = nltk.sent_tokenize(block)
-    word_sents = map(nltk.word_tokenize, sents)
-    d = dict((compute_score(word_sent, word_sents), sent) for sent, word_sent in zip(sents, word_sents))
+    word_sents = list(map(nltk.word_tokenize, sents))
+    d = dict((compute_score(word_sent, word_sents), sent)
+             for sent, word_sent in zip(sents, word_sents))
     return d[max(d.keys())]
 
 
@@ -65,6 +81,7 @@ def find_likely_body(b):
 
 
 class Summary(object):
+
     def __init__(self, url, article_html, title, summaries):
         self.url = url
         self.article_html = article_html
@@ -72,34 +89,36 @@ class Summary(object):
         self.summaries = summaries
 
     def __repr__(self):
-        return 'Summary({0}, {1}, {2}, {3})'.format(
-            repr(self.url), repr(self.article_html), repr(self.title), repr(self.summaries)
-        )
+        return 'Summary({}, {}, {}, {})'.format(repr(self.url), repr(self.article_html), repr(self.title), repr(self.summaries))
+
+    def __unicode__(self):
+        return u('{} - {}\n\n{}'.format(self.title, self.url, '\n'.join(self.summaries)))
 
     def __str__(self):
-        return u"{0} - {1}\n\n{2}".format(self.title, self.url, '\n'.join(self.summaries))
+        if _IS_PYTHON_3:
+            return self.__unicode__()
+        else:
+            return self.__unicode__().encode('utf8')
 
 
 def summarize_page(url):
     import bs4
-    import re
     import requests
 
     html = bs4.BeautifulSoup(requests.get(url).text)
     b = find_likely_body(html)
-    summaries = map(lambda p: re.sub('\s+', ' ', summarize_block(p.text) or '').strip(), b.find_all('p'))
-    summaries = sorted(set(summaries), key=summaries.index)  # deduplicate and preserve order
-    summaries = [re.sub('\s+', ' ', summary.strip())
-                 for summary in summaries
-                 if filter(lambda c: c.lower() in string.letters, summary)]
+    summaries = [re.sub('\s+', ' ', summarize_block(p.text) or '').strip()
+                 for p in b.find_all('p')]
+    # deduplicate and preserve order
+    summaries = sorted(set(summaries), key=summaries.index)
+    summaries = [u(re.sub('\s+', ' ', summary.strip()))
+                 for summary in summaries if any(c.lower() in string.ascii_lowercase for c in summary)]
     return Summary(url, b, html.title.text if html.title else None, summaries)
 
 if __name__ == '__main__':
-    import sys
-
-    if len(sys.argv) > 0:
-        print (u"%s" % summarize_page(sys.argv[1])).encode('ascii','replace')
+    if len(sys.argv) > 1:
+        print(summarize_page(sys.argv[1]))
         sys.exit(0)
 
-    print "Usage summarize.py <URL>"
+    print('Usage summarize.py <URL>')
     sys.exit(1)
