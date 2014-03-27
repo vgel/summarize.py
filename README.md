@@ -12,8 +12,15 @@ A python script for summarizing articles using nltk.
 ## Usage:
 
     git clone https://github.com/Rotten194/summarize.py.git
-    cd summarize.py
+    cd summarize.py/summarize
     ./summarize.py http://www.washingtonpost.com/blogs/the-switch/wp/2013/08/01/how-vermont-could-save-the-nation-from-patent-trolls/
+
+Usage from code:
+
+    # sudo python setup.py install
+    # then
+    import summarize
+    summarize.summarize_text(large_text)
 
 ## Python 3 Support Notes:
 
