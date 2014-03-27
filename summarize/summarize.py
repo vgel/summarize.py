@@ -102,19 +102,27 @@ class Summary(object):
             return self.__unicode__().encode('utf8')
 
 
+def summarize_blocks(blocks):
+    summaries = [re.sub('\s+', ' ', summarize_block(block) or '').strip()
+                 for block in blocks]
+    # deduplicate and preserve order
+    summaries = sorted(set(summaries), key=summaries.index)
+    return [u(re.sub('\s+', ' ', summary.strip())) for summary in summaries if any(c.lower() in string.ascii_lowercase for c in summary)]
+
+
 def summarize_page(url):
     import bs4
     import requests
 
     html = bs4.BeautifulSoup(requests.get(url).text)
     b = find_likely_body(html)
-    summaries = [re.sub('\s+', ' ', summarize_block(p.text) or '').strip()
-                 for p in b.find_all('p')]
-    # deduplicate and preserve order
-    summaries = sorted(set(summaries), key=summaries.index)
-    summaries = [u(re.sub('\s+', ' ', summary.strip()))
-                 for summary in summaries if any(c.lower() in string.ascii_lowercase for c in summary)]
+    summaries = summarize_blocks(map(lambda p: p.text, b.find_all('p')))
     return Summary(url, b, html.title.text if html.title else None, summaries)
+
+
+def summarize_text(text, block_sep='\n\n', url=None, title=None):
+    return Summary(url, None, title, summarize_blocks(text.split(block_sep)))
+
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:
