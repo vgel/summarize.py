@@ -23,7 +23,7 @@ UPPER_BOUND = .90
 
 def u(s):
     """Ensure our string is unicode independent of Python version, since Python 3 versions < 3.3 do not support the u"..." prefix"""
-    if _IS_PYTHON_3:
+    if _IS_PYTHON_3 or type(s) == unicode:
         return s
     else:
         # not well documented but seems to work
@@ -90,10 +90,10 @@ class Summary(object):
         self.summaries = summaries
 
     def __repr__(self):
-        return 'Summary({}, {}, {}, {})'.format(repr(self.url), repr(self.article_html), repr(self.title), repr(self.summaries))
+        return u('Summary({}, {}, {}, {})').format(repr(self.url), repr(self.article_html), repr(self.title), repr(self.summaries))
 
     def __unicode__(self):
-        return u('{} - {}\n\n{}'.format(self.title, self.url, '\n'.join(self.summaries)))
+        return u('{} - {}\n\n{}').format(self.title, self.url, '\n'.join(self.summaries))
 
     def __str__(self):
         if _IS_PYTHON_3:
