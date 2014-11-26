@@ -6,6 +6,7 @@ A python script for summarizing articles using nltk.
 ## Requires:
 * python2.7 / python 3
 * nltk (if using Python 3, see note below)
+* nltk `stopwords` corpora (`python -c 'import nltk; nltk.download("stopwords")'`) 
 * bs4 (only for opening urls)
 * requests (only for opening urls)
 
