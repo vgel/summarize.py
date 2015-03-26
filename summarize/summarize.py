@@ -50,7 +50,8 @@ def compare_sents(sent1, sent2):
 def compare_sents_bounded(sent1, sent2):
     """If the result of compare_sents is not between LOWER_BOUND and
     UPPER_BOUND, it returns 0 instead, so outliers don't mess with the sum"""
-    if LOWER_BOUND < compare_sents(sent1, sent2) < UPPER_BOUND:
+    cmpd = compare_sents(sent1, sent2)
+    if LOWER_BOUND < cmpd < UPPER_BOUND:
         return cmpd
     else:
         return 0
