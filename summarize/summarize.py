@@ -51,9 +51,11 @@ def compare_sents_bounded(sent1, sent2):
     """If the result of compare_sents is not between LOWER_BOUND and
     UPPER_BOUND, it returns 0 instead, so outliers don't mess with the sum"""
     cmpd = compare_sents(sent1, sent2)
-    if cmpd <= LOWER_BOUND or cmpd >= UPPER_BOUND:
+    if LOWER_BOUND < cmpd < UPPER_BOUND:
+        return cmpd
+    else:
         return 0
-    return cmpd
+    
 
 
 def compute_score(sent, sents):
